@@ -7,26 +7,19 @@ namespace SalesTaxApp.Services
 {
     public class ReceiptService : IReceiptService
     {
-        private readonly ITaxCalculator _taxCalculator;
-
-        public ReceiptService(ITaxCalculator taxCalculator)
-        {
-            _taxCalculator = taxCalculator;
-        }
-
         public string GenerateReceipt(List<Item> items)
         {
             if (items == null || !items.Any())
                 throw new ArgumentException("Items list cannot be empty.");
 
-            decimal totalSalesTax = 0m;
+            decimal totalSalesTax = 0m;   //Initially set to 0
             decimal totalPrice = 0m;
 
             var receipt = new List<string>();
 
             foreach (var item in items)
             {
-                var tax = item.GetTaxAmount(_taxCalculator);
+                var tax = item.CalculateSalesTax();
                 totalSalesTax += tax;
                 totalPrice += item.Price + tax;
 
