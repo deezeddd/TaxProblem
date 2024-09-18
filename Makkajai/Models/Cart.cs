@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using SalesTaxApp.Models;
 
-namespace SalesTaxApp.Entities
+namespace SalesTaxApp.Models
 {
     public class Cart
     {

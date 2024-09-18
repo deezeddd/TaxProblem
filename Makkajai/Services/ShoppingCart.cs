@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using SalesTaxApp.Entities;
+using SalesTaxApp.Interface;
 using SalesTaxApp.Models;
 using SalesTaxApp.Utils;
 namespace SalesTaxApp.Services
@@ -35,6 +34,7 @@ namespace SalesTaxApp.Services
         }
         #endregion
 
+        #region Private Method
 
         private void AddItem(Item item)
         {
@@ -45,15 +45,14 @@ namespace SalesTaxApp.Services
 
             cart.AddItem(item);
         }
-
         private void PrintReceipt(Cart cart)
         {
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart), "Cart cannot be null.");
-            string receipt = receiptService.GenerateReceipt(cart.Items);
+            string receipt = receiptService.GenerateReceipt(cart);
             Console.WriteLine(receipt);
         }
-
+        #endregion
     }
 
 }

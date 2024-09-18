@@ -1,5 +1,7 @@
-
-public interface IShoppingCart
+namespace SalesTaxApp.Interface
 {
-    public void ReadUserInput();
+    public interface IShoppingCart
+    {
+        public void ReadUserInput();
+    }
 }

@@ -1,4 +1,3 @@
-using SalesTaxApp.Entities;
 using SalesTaxApp.Models;
 using System;
 using System.Collections.Generic;
@@ -8,23 +7,23 @@ namespace SalesTaxApp.Services
 {
     public class ReceiptService : IReceiptService
     {
-        public string GenerateReceipt(List<Item> items)
+        public string GenerateReceipt(Cart cart)
         {
-            if (items == null || !items.Any())
-                throw new ArgumentException("Items list cannot be empty.");
+            if (cart == null || !cart.Items.Any())
+                throw new ArgumentException("Cart cannot be empty.", nameof(cart));
 
-            decimal totalSalesTax = 0m;   //Initially set to 0
+            decimal totalSalesTax = 0m; // Initially set to 0
             decimal totalPrice = 0m;
 
-            List<string> receipt = new List<string>();
+            List<string> receipt = new();
 
-            foreach (var item in items)
+            foreach (Item item in cart.Items)
             {
-                var tax = item.CalculateSalesTax();
-                totalSalesTax += tax ;
-                totalPrice += item.Price  + tax;
+                var salesTax = item.CalculateSalesTax();
+                totalSalesTax += salesTax;
+                totalPrice += item.Price + salesTax;
 
-                receipt.Add(FormatItemLine(item, tax));
+                receipt.Add(FormatItemLine(item, salesTax));
             }
 
             receipt.Add($"Sales Taxes: {totalSalesTax:F2}");
@@ -38,19 +37,5 @@ namespace SalesTaxApp.Services
             decimal finalPrice = item.Price + salesTax;
             return $"{item.Name}: {finalPrice:F2}";
         }
-
-        // // #region Private Method
-        // //Prints the receipt
-        // public static void PrintReceipt(Cart cart)
-        // {
-        //     if (cart == null)
-        //         throw new ArgumentNullException(nameof(cart), "Cart cannot be null.");
-
-        //     var receiptService = new ReceiptService();
-        //     string receipt = receiptService.GenerateReceipt(cart.Items);
-        //     Console.WriteLine(receipt);
-        // }
-        // // #endregion
-
     }
 }

@@ -1,58 +1,50 @@
-using NSubstitute;
 using SalesTaxApp.Models;
 using SalesTaxApp.Services;
+using System;
+using System.Collections.Generic;
+using Xunit;
 
 namespace SalesTaxApp.Tests
 {
     public class ReceiptServiceTests
     {
-        private readonly ITaxCalculator taxCalculator;
-        private readonly IReceiptService receiptService;
+        private readonly ReceiptService _receiptService;
 
         public ReceiptServiceTests()
         {
-            taxCalculator = Substitute.For<ITaxCalculator>();
-            receiptService = Substitute.For<ReceiptService>(taxCalculator);
+            _receiptService = new ReceiptService();
         }
 
         [Fact]
-        public void GenerateReceipt_ShouldReturnCorrectTotalAndTaxes_ForRegularItems()
+        public void GenerateReceipt_ValidCart_ReturnsReceipt()
         {
             // Arrange
-            taxCalculator.CalculateTax(Arg.Any<Item>(), Arg.Any<bool>()).Returns(1.50m);
-
-            List<Item> items = new List<Item>
-            {
-                new Item("book", 12.49m, false),
-                new TaxableItem("music CD", 14.99m, false)
-            };
+            var cart = new Cart();
+            cart.AddItem(new Item("book", 1, 12.49m,  false,  false));
+            cart.AddItem(new Item("music CD", 1, 14.99m,  false,  true));
+            cart.AddItem(new Item("imported chocolate", 1, 10.00m,  true,  false));
 
             // Act
-            string result = receiptService.GenerateReceipt(items);
+            string receipt = _receiptService.GenerateReceipt(cart);
 
             // Assert
-            Assert.Contains("Sales Taxes: 3.00", result);
-            Assert.Contains("Total: 30.48", result);
+            Assert.Contains("book: ", receipt);
+            Assert.Contains("music CD:", receipt);
+            Assert.Contains("imported chocolate: ", receipt);
+            Assert.Contains("Sales Taxes: ", receipt);
+            Assert.Contains("Total: 39.48", receipt);
         }
 
         [Fact]
-        public void GenerateReceipt_ShouldReturnCorrectTotalAndTaxes()
+        public void GenerateReceipt_EmptyCart_ThrowsArgumentException()
         {
             // Arrange
-            taxCalculator.CalculateTax(Arg.Any<Item>(), Arg.Any<bool>()).Returns(1.50m);
+            var cart = new Cart();
 
-            List<Item> items = new List<Item>
-            {
-                new TaxableItem("1 imported bottle of perfume", 47.50m, true),
-                new ImportedItem("1 imported box of chocolates", 10.00m)
-            };
-
-            // Act
-            string result = receiptService.GenerateReceipt(items);
-
-            // Assert
-            Assert.Contains("Sales Taxes: 3.00", result);
-            Assert.Contains("Total: 60.50", result);
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => _receiptService.GenerateReceipt(cart));
+            Assert.Equal("Cart cannot be empty. (Parameter 'cart')", exception.Message);
         }
+
     }
 }
