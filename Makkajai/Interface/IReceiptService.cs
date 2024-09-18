@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SalesTaxApp.Entities;
 using SalesTaxApp.Models;
 
 namespace SalesTaxApp.Services

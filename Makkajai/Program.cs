@@ -9,8 +9,8 @@ namespace SalesTaxApp
         {
             try
             {
-                
-                var shoppingCart = new ShoppingCart();
+                IReceiptService receiptService = new ReceiptService();
+                IShoppingCart shoppingCart = new ShoppingCart(receiptService);
                 shoppingCart.ReadUserInput();                
 
             }

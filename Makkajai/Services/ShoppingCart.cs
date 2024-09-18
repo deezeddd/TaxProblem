@@ -5,12 +5,15 @@ using SalesTaxApp.Models;
 using SalesTaxApp.Utils;
 namespace SalesTaxApp.Services
 {
-    public class ShoppingCart
+    public class ShoppingCart : IShoppingCart
     {   
-        public Cart Cart;
-        
-        public ShoppingCart(){
-            Cart = new Cart(); // Instantiate new Cart
+        private readonly Cart cart;
+        private readonly IReceiptService receiptService;
+
+        public ShoppingCart(IReceiptService _receiptService)
+        {
+            cart = new Cart(); // Instantiate new Cart
+            this.receiptService = _receiptService ?? throw new ArgumentNullException(nameof(_receiptService));
         }
 
         #region Public Method
@@ -26,22 +29,31 @@ namespace SalesTaxApp.Services
                     break;
                 }
                 Item item = ParseLogic.StringParser(input);  // Parsing Input
-                Cart.AddItem(item);  //Adding Item to List
+                AddItem(item);  //Adding Item to List
             }
-            PrintReceipt();  //Printing Receipt of the cart
+            PrintReceipt(cart);  //Printing Receipt of the cart
         }
         #endregion
-        
-        #region Private Method
 
-        //Prints the receipt
-        private void PrintReceipt()
+
+        private void AddItem(Item item)
         {
-            var receiptService = new ReceiptService();
-            string receipt = receiptService.GenerateReceipt(Cart.Items);
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item), "Item cannot be null.");
+            }
+
+            cart.AddItem(item);
+        }
+
+        private void PrintReceipt(Cart cart)
+        {
+            if (cart == null)
+                throw new ArgumentNullException(nameof(cart), "Cart cannot be null.");
+            string receipt = receiptService.GenerateReceipt(cart.Items);
             Console.WriteLine(receipt);
         }
-        #endregion
 
     }
+
 }

@@ -7,7 +7,7 @@ namespace SalesTaxApp.Models
     {
         #region Properties
         public string Name { get; }
-        public int Qunatity {get;}
+        public int Qunatity { get;}
         public decimal Price { get; }
         public bool IsImported { get; }
         public bool IsTaxable { get; }

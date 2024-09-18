@@ -1,3 +1,4 @@
+using SalesTaxApp.Entities;
 using SalesTaxApp.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace SalesTaxApp.Services
             decimal totalSalesTax = 0m;   //Initially set to 0
             decimal totalPrice = 0m;
 
-            var receipt = new List<string>();
+            List<string> receipt = new List<string>();
 
             foreach (var item in items)
             {
@@ -23,7 +24,7 @@ namespace SalesTaxApp.Services
                 totalSalesTax += tax ;
                 totalPrice += item.Price  + tax;
 
-                receipt.Add($"{item.Name}: {item.Price + tax:F2}");
+                receipt.Add(FormatItemLine(item, tax));
             }
 
             receipt.Add($"Sales Taxes: {totalSalesTax:F2}");
@@ -31,5 +32,25 @@ namespace SalesTaxApp.Services
 
             return string.Join(Environment.NewLine, receipt);
         }
+
+        private static string FormatItemLine(Item item, decimal salesTax)
+        {
+            decimal finalPrice = item.Price + salesTax;
+            return $"{item.Name}: {finalPrice:F2}";
+        }
+
+        // // #region Private Method
+        // //Prints the receipt
+        // public static void PrintReceipt(Cart cart)
+        // {
+        //     if (cart == null)
+        //         throw new ArgumentNullException(nameof(cart), "Cart cannot be null.");
+
+        //     var receiptService = new ReceiptService();
+        //     string receipt = receiptService.GenerateReceipt(cart.Items);
+        //     Console.WriteLine(receipt);
+        // }
+        // // #endregion
+
     }
 }
