@@ -9,6 +9,7 @@ namespace SalesTaxApp
         {
             try
             {
+                
                 var shoppingCart = new ShoppingCart();
                 shoppingCart.ReadUserInput();                
 

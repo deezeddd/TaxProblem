@@ -1,29 +1,23 @@
 using System;
 using System.Collections.Generic;
-using dotnetcore.Utils;
+using SalesTaxApp.Entities;
 using SalesTaxApp.Models;
+using SalesTaxApp.Utils;
 namespace SalesTaxApp.Services
 {
     public class ShoppingCart
-    {
-        private List<Item> Items { get; set; }
-
+    {   
+        public Cart Cart;
+        
         public ShoppingCart(){
-            Items = new List<Item>();
+            Cart = new Cart(); // Instantiate new Cart
         }
 
-        public void AddItem(Item item){
-            Items.Add(item);
-        }
-        public void PrintReceipt(){
-            var receiptService = new ReceiptService();
-            string receipt = receiptService.GenerateReceipt(Items);
-            Console.WriteLine(receipt);
-        }
-
+        #region Public Method
+        //Reads User input
         public void ReadUserInput(){
 
-            Console.WriteLine("Enter items (or press Enter to finish):");
+            Console.WriteLine("Enter items (or press Enter x2 to finish):");
             while (true)
             {
                 string input = Console.ReadLine();
@@ -32,10 +26,22 @@ namespace SalesTaxApp.Services
                     break;
                 }
                 Item item = ParseLogic.StringParser(input);  // Parsing Input
-                AddItem(item);  //Adding Item to List
+                Cart.AddItem(item);  //Adding Item to List
             }
             PrintReceipt();  //Printing Receipt of the cart
         }
+        #endregion
+        
+        #region Private Method
+
+        //Prints the receipt
+        private void PrintReceipt()
+        {
+            var receiptService = new ReceiptService();
+            string receipt = receiptService.GenerateReceipt(Cart.Items);
+            Console.WriteLine(receipt);
+        }
+        #endregion
 
     }
 }

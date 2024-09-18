@@ -20,8 +20,8 @@ namespace SalesTaxApp.Services
             foreach (var item in items)
             {
                 var tax = item.CalculateSalesTax();
-                totalSalesTax += tax;
-                totalPrice += item.Price + tax;
+                totalSalesTax += tax ;
+                totalPrice += item.Price  + tax;
 
                 receipt.Add($"{item.Name}: {item.Price + tax:F2}");
             }
