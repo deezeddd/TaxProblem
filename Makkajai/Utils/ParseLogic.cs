@@ -12,8 +12,8 @@ namespace SalesTaxApp.Utils
             if (atIndex == -1) return null;
             string name = input[..atIndex];
             string price = input[(atIndex + 2)..];
-
-            return new Item(name, Convert.ToInt32(name[1]), decimal.Parse(price), IsImported(input), IsTaxable(input));
+            int quantity = input[0] - '0';
+            return new Item(name, quantity , decimal.Parse(price), IsImported(input), IsTaxable(input));
         }
         #endregion
 

@@ -34,13 +34,13 @@ namespace SalesTaxApp.Models
             // Basic sales tax
             if (IsTaxable)
             {
-                totalTax += Price * 0.10m;
+                totalTax += Price * 0.10m * Quantity;
             }
 
             // Import duty
             if (IsImported)
             {
-                totalTax += TaxUtils.ImportDuty(Price);
+                totalTax += TaxUtils.ImportDuty(Price) * Quantity;
             }
 
             // Round up to the nearest 0.05

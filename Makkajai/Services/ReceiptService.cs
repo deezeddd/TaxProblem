@@ -12,7 +12,7 @@ namespace SalesTaxApp.Services
             if (cart == null || !cart.Items.Any())
                 throw new ArgumentException("Cart cannot be empty.", nameof(cart));
 
-            decimal totalSalesTax = 0m; // Initially set to 0
+            decimal totalSalesTax = 0m;
             decimal totalPrice = 0m;
 
             List<string> receipt = new();
@@ -20,8 +20,8 @@ namespace SalesTaxApp.Services
             foreach (Item item in cart.Items)
             {
                 var salesTax = item.CalculateSalesTax();
-                totalSalesTax += salesTax;
-                totalPrice += item.Price + salesTax;
+                totalSalesTax += salesTax * item.Quantity;
+                totalPrice += (item.Price + salesTax) * item.Quantity;
 
                 receipt.Add(FormatItemLine(item, salesTax));
             }
@@ -34,8 +34,8 @@ namespace SalesTaxApp.Services
 
         private static string FormatItemLine(Item item, decimal salesTax)
         {
-            decimal finalPrice = item.Price + salesTax;
-            return $"{item.Name}: {finalPrice:F2}";
+            decimal finalPrice = (item.Price + salesTax) * item.Quantity;
+            return $"{item.Quantity} {item.Name}: {finalPrice:F2}";
         }
     }
 }
